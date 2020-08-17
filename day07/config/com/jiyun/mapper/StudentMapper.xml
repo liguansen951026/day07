@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiyun.mapper.StudentMapper" >
+<resultMap type="student" id="BaseMap">
+	<id column="sid" property="sid"/>
+	<result column="sname" property="sname"/>
+	<result column="age" property="age"/>
+	<result column="sex" property="sex"/>
+	<result column="birthday" property="birthday"/>
+	<result column="pic" property="pic"/>
+	<result column="depid" property="depid"/>
+	<association property="dept" javaType="dept">
+		<id column="depid" property="depid"/>
+		<result column="dname" property="dname"/>
+	</association>
+</resultMap>
+<select id="findAll" resultMap="BaseMap">
+	select * from student s,dept d where s.depid=d.depid order by sid
+</select>
+<select id="findDept" resultType="dept">
+	select * from dept
+</select>
+<insert id="addStudent" parameterType="student">
+	insert into student() values(null,#{sname},#{age},#{sex},#{depid},#{birthday},#{pic})
+</insert>
+<update id="updateStudent" parameterType="student">
+	update student set sname=#{sname},age=#{age},sex=#{sex},birthday=#{birthday},depid=#{depid} where sid=#{sid}
+</update>
+<delete id="deleteStudent">
+	delete from student 
+	<where>
+		sid in
+		<foreach collection="ids" item="id" open="(" close=")" separator=",">
+			#{id}
+		</foreach>
+	</where>
+</delete>
+</mapper>
